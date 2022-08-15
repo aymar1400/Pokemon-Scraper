@@ -2,10 +2,6 @@ import string
 from bs4 import BeautifulSoup
 import requests
 
-# (0) Normal, (1) Fire, (2) Water,  (3) Grass, (4) Electric, (5) Ice, (6) Fighting, 
-# (7) Poison, (8) Ground, (9) Flying, (10) Psychic, (11) Bug, (12) Rock, (13) Ghost, 
-# (14) Dragon, (15) Dark, (16) Steel, (17) Fairy
-
 normal = [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1]
 fire = [1, 0.5, 2, 0.5, 1, 0.5, 1, 1, 2, 1, 1, 0.5, 2, 1, 1, 1, 0.5, 0.5]
 water = [1, 0.5, 0.5, 2, 2, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5, 1]
@@ -27,22 +23,33 @@ fairy = [1, 1, 1, 1, 1, 1, 0.5, 2, 1, 1, 1, 0.5, 1, 1, 0, 0.5, 2, 1]
 
 noType = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-doubleWeak = []
+inputPokemon = input("Enter a pokemon: ")
+pokemonLength = len(inputPokemon) + 2
+endIndex = pokemonLength + 5
+
 weaknesses = []
 neutral = []
 resistances = []
-doubleResist = []
 immunities = []
 
-inputPokemon = input("Enter a pokemon: ")
-pokemonLength = len(inputPokemon)
 
 urlString = "https://pokemondb.net/pokedex/" + inputPokemon
 
-
 html_text = requests.get(urlString).text
+
 soup = BeautifulSoup(html_text, 'lxml')
 types = soup.find('div', class_ = "grid-col span-md-6 span-lg-8").text
+
+subString = types[pokemonLength:endIndex]
+
+if subString == "is an":
+    pokemonLength = pokemonLength + 6
+else:
+    pokemonLength = pokemonLength + 5
+
+typeLabel = types[pokemonLength:types.find('type') - 1]
+
+checker = typeLabel[typeLabel.find('/')]
 
 def my_function(listVar):
     for i in range(18):
@@ -281,53 +288,11 @@ def my_function(listVar):
             elif (listVar[i] == 4):
                 weaknesses.append("FAIRY")
 
-typeLabel = types[pokemonLength + 7:types.find('type') - 1]
-
-if (typeLabel[0] == ' '): # single type
-    typeLabel = types[pokemonLength + 8:types.find('type') - 1]
-    pokemonType = typeLabel
-    if (pokemonType == "Normal"):
-        pokemonType = normal
-    elif (pokemonType == "Fire"):
-        pokemonType = fire
-    elif (pokemonType == "Water"):
-        pokemonType = water
-    elif (pokemonType == "Grass"):
-        pokemonType = grass
-    elif (pokemonType == "Electric"):
-        pokemonType = electric
-    elif (pokemonType == "Ice"):
-        pokemonType = ice
-    elif (pokemonType == "Fighting"):
-        pokemonType = fighting
-    elif (pokemonType == "Poison"):
-        pokemonType = poison
-    elif (pokemonType == "Ground"):
-        pokemonType = ground
-    elif (pokemonType == "Flying"):
-        pokemonType = flying
-    elif (pokemonType == "Psychic"):
-        pokemonType = psychic
-    elif (pokemonType == "Bug"):
-        pokemonType = bug
-    elif (pokemonType == "Rock"):
-        pokemonType = rock
-    elif (pokemonType == "Ghost"):
-        pokemonType = ghost
-    elif (pokemonType == "Dragon"):
-        pokemonType = dragon
-    elif (pokemonType == "Dark"):
-        pokemonType = dark
-    elif (pokemonType == "Steel"):
-        pokemonType = steel
-    elif (pokemonType == "Fairy"):
-        pokemonType = fairy
-    print(typeLabel)
-else: # dual type
+if checker == "/":
     slashIndex = typeLabel.find('/')
-    print(typeLabel)
     type1 = typeLabel[0:slashIndex]
     type2 = typeLabel[slashIndex+1:len(typeLabel)]
+    print(typeLabel)
     if (type1 == "Normal"):
         type1 = normal
     elif (type1 == "Fire"):
@@ -400,15 +365,53 @@ else: # dual type
         type2 = steel
     elif (type2 == "Fairy"):
         type2 = fairy
-    
+
     pokemonType = []
     for i in range(0, len(normal)):
         pokemonType.append(type1[i] * type2[i])
+else:
+    pokemonType = typeLabel
+    if (pokemonType == "Normal"):
+        pokemonType = normal
+    elif (pokemonType == "Fire"):
+        pokemonType = fire
+    elif (pokemonType == "Water"):
+        pokemonType = water
+    elif (pokemonType == "Grass"):
+        pokemonType = grass
+    elif (pokemonType == "Electric"):
+        pokemonType = electric
+    elif (pokemonType == "Ice"):
+        pokemonType = ice
+    elif (pokemonType == "Fighting"):
+        pokemonType = fighting
+    elif (pokemonType == "Poison"):
+        pokemonType = poison
+    elif (pokemonType == "Ground"):
+        pokemonType = ground
+    elif (pokemonType == "Flying"):
+        pokemonType = flying
+    elif (pokemonType == "Psychic"):
+        pokemonType = psychic
+    elif (pokemonType == "Bug"):
+        pokemonType = bug
+    elif (pokemonType == "Rock"):
+        pokemonType = rock
+    elif (pokemonType == "Ghost"):
+        pokemonType = ghost
+    elif (pokemonType == "Dragon"):
+        pokemonType = dragon
+    elif (pokemonType == "Dark"):
+        pokemonType = dark
+    elif (pokemonType == "Steel"):
+        pokemonType = steel
+    elif (pokemonType == "Fairy"):
+        pokemonType = fairy
+    print(typeLabel)
 
 my_function(pokemonType)
 print("Weak: " + str(weaknesses))
 print("Neutral: " + str(neutral))
 print("Resist: " + str(resistances))
 print("Immunities: " + str(immunities))
-
-test = input("")
+test = input("Press a button to exit")
