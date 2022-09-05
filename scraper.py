@@ -410,8 +410,8 @@ else:
     print(typeLabel)
 
 my_function(pokemonType)
-print("Weak: " + str(weaknesses))
-print("Neutral: " + str(neutral))
+print("\nWeak: " + str(weaknesses))
+#print("Neutral: " + str(neutral))
 print("Resist: " + str(resistances))
 print("Immunities: " + str(immunities))
-test = input("Press a button to exit")
+test = input("\nPress a button to exit")
